@@ -289,9 +289,8 @@ int RedisServer::handleRead(Conn &c)
 
     if (cmd_len > (c.rbuf_woffset - c.rbuf_roffset))
     {
-      /* partial read
-       * shift the data to the start of the buffer
-       * and try reading again on the next epoll call */
+      /* partial read shift the data to the start of the buffer
+         and try reading again on the next epoll call */
       Logger::log(Logger::DEBUG, "partial read. shifting buffer");
       c.rbuf_roffset -= 4; /* restore len header */
       std::memmove(c.rbuf.data(), c.rbuf.data() + c.rbuf_roffset, (c.rbuf_woffset - c.rbuf_roffset));
@@ -299,11 +298,6 @@ int RedisServer::handleRead(Conn &c)
       c.rbuf_roffset = 0;
       return 0;
     }
-
-    // char tmp = c.rbuf[c.rbuf_roffset + cmd_len];
-    // c.rbuf[c.rbuf_roffset + cmd_len] = '\0';
-    // std::cout << "[INFO]: client says " << c.rbuf.data() + c.rbuf_roffset << "\n";
-    // c.rbuf[c.rbuf_roffset + cmd_len] = tmp; // restore
 
     c.cmd.addArgs(std::string((char *)(c.rbuf.data() + c.rbuf_roffset), cmd_len));
     c.rbuf_roffset += cmd_len;
