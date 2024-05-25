@@ -6,7 +6,8 @@
 
 #pragma once
 
-enum ConnState {
+enum ConnState
+{
   STATE_READ,
   STATE_WRITE,
   STATE_END
@@ -14,7 +15,7 @@ enum ConnState {
 
 /**
  * Conn struct: a structure that represents a connection
- * 
+ *
  * This struct contains the following fields:
  *   int fd;                      : the file descriptor of the connection
  *   ConnState state{};           : state of the connection -> whether the server needs to read from the socket, or send a reply.
@@ -24,19 +25,22 @@ enum ConnState {
  *   size_t pending_write_len{};  : amount of data still pending in the write buffer
  *   char* rbuf;                  : pointer to the read buffer
  *   char* wbuf;                  : pointer to the write buffer
- * 
+ *
  */
-struct Conn {
+struct Conn
+{
   Conn()
-  : Conn(-1)
-  {}
+      : Conn(-1)
+  {
+  }
 
   Conn(int fd)
-  : fd{fd},
-    state{STATE_READ},
-    rbuf(Consts::SIZE_HEADER_LEN + Consts::MAX_MSG_LEN),
-    wbuf(Consts::SIZE_HEADER_LEN + Consts::MAX_MSG_LEN)
-  {}
+      : fd{fd},
+        state{STATE_READ},
+        rbuf(Consts::SIZE_HEADER_LEN + Consts::MAX_MSG_LEN),
+        wbuf(Consts::SIZE_HEADER_LEN + Consts::MAX_MSG_LEN)
+  {
+  }
 
   // Conn(const Conn& other) = delete;
   // Conn& operator=(const Conn& other) = delete;
@@ -44,7 +48,8 @@ struct Conn {
   // Conn(Conn&& other) = default;
   // Conn& operator=(Conn&& other) = default;
 
-  void reset() {
+  void reset()
+  {
     fd = -1;
     state = STATE_READ;
     rbuf_roffset = 0;
@@ -54,7 +59,8 @@ struct Conn {
     cmd.reset();
   }
 
-  void init(int fd) {
+  void init(int fd)
+  {
     reset();
     this->fd = fd;
   }
