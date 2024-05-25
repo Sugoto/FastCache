@@ -295,6 +295,7 @@ int main()
     die("socket()");
   }
 
+  // Connect to server using loopback address and port 6969
   struct sockaddr_in addr = {};
   addr.sin_family = AF_INET;
   addr.sin_port = ntohs(6969);
