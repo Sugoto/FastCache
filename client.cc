@@ -286,7 +286,7 @@ int runTests(int fd)
 
 int main()
 {
-  /* disable printf buffering */
+  /* disable printf buffering to make sure messages are printed immediately */
   setbuf(stdout, NULL);
 
   int fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -310,6 +310,8 @@ int main()
   char key[50], value[50];
   int option;
 
+
+  // Start menu for user interaction
   while (true)
   {
     std::cout << "Choose an option:\n";
