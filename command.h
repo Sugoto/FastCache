@@ -3,11 +3,12 @@
 
 #pragma once
 
-struct Command {
+struct Command
+{
   Command();
   Command(size_t args_size);
 
-  bool addArgs(std::string&& s);
+  bool addArgs(std::string &&s);
   void reset();
   bool isEmpty();
   bool isComplete();
