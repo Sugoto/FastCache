@@ -8,6 +8,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <netinet/ip.h>
+#include <iostream>
 
 const size_t k_max_msg = 4096;
 
@@ -304,9 +305,59 @@ int main()
     die("can't connect to server");
   }
 
-  int err = runTests(fd);
+  char buf[2 * k_max_msg];
+  size_t message_len;
+  char key[50], value[50];
+  int option;
 
-  close(fd);
+  while (true)
+  {
+    std::cout << "Choose an option:\n";
+    std::cout << "1. SET\n";
+    std::cout << "2. GET\n";
+    std::cout << "3. DELETE\n";
+    std::cout << "4. Send invalid command\n";
+    std::cout << "5. Exit\n";
+    std::cin >> option;
 
-  return err;
+    switch (option)
+    {
+    case 1:
+      std::cout << "Enter key: ";
+      std::cin >> key;
+      std::cout << "Enter value: ";
+      std::cin >> value;
+      message_len = prepare_set_cmd(key, value, buf);
+      send_command(fd, buf, message_len);
+      receive_reply(fd);
+      break;
+    case 2:
+      std::cout << "Enter key: ";
+      std::cin >> key;
+      message_len = prepare_get_cmd(key, buf);
+      send_command(fd, buf, message_len);
+      receive_reply(fd);
+      break;
+    case 3:
+      std::cout << "Enter key: ";
+      std::cin >> key;
+      message_len = prepare_del_cmd(key, buf);
+      send_command(fd, buf, message_len);
+      receive_reply(fd);
+      break;
+    case 4:
+      message_len = prepare_malformed(buf);
+      send_command(fd, buf, message_len);
+      receive_reply(fd);
+      break;
+    case 5:
+      close(fd);
+      return 0;
+    default:
+      std::cout << "Invalid option\n";
+      break;
+    }
+  }
+
+  return 0;
 }
