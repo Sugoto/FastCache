@@ -1,5 +1,6 @@
 #include "command.h"
 
+// Notify all commands
 Command::Command()
     : Command(0)
 {
